@@ -1,5 +1,5 @@
 """
-F.R.I.D.A.Y. Voice Agent — Phase 1 Improved
+F.R.I.D.A.Y. Voice Agent — Phase 1 (Stability + Personality)
 """
 
 import logging
@@ -7,7 +7,7 @@ import asyncio
 from dotenv import load_dotenv
 
 from livekit.agents import JobContext, WorkerOptions, cli
-from livekit.agents.voice import Agent, AgentSession
+from livekit.agents.voice import Agent
 
 # Plugins
 from livekit.plugins import groq as lk_groq
@@ -15,7 +15,7 @@ from livekit.plugins import elevenlabs as lk_elevenlabs
 from livekit.plugins import sarvam
 
 from friday.config import config
-from friday.prompts.jarvis_system_prompt import SYSTEM_PROMPT  # new import
+from friday.prompts.jarvis_system_prompt import SYSTEM_PROMPT   # ← this should now work
 
 load_dotenv()
 
@@ -23,13 +23,13 @@ logger = logging.getLogger("friday-agent")
 logger.setLevel(logging.INFO if not config.DEBUG else logging.DEBUG)
 
 # ---------------------------------------------------------------------------
-# Build providers (using centralized config)
+# Build providers
 # ---------------------------------------------------------------------------
 
 def _build_stt():
     if config.STT_PROVIDER == "sarvam":
         logger.info("STT → Sarvam Saaras v3")
-        return sarvam.STT(language="unknown", model="saaras:v3", mode="transcribe")
+        return sarvam.STT()
     raise ValueError(f"Unknown STT_PROVIDER: {config.STT_PROVIDER}")
 
 def _build_llm():
@@ -59,13 +59,10 @@ async def entrypoint(ctx: JobContext):
         stt=_build_stt(),
         llm=_build_llm(),
         tts=_build_tts(),
-        # Add retry logic automatically
-        turn_detection=...  # (LiveKit default is fine for now)
     )
 
     await ctx.connect()
     await agent.start(ctx)
-
     logger.info("✅ FRIDAY is listening. Say something!")
 
 if __name__ == "__main__":

@@ -6,6 +6,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
+    # === Server Settings (used by server.py) ===
+    SERVER_NAME = "F.R.I.D.A.Y. MCP"
+    SERVER_VERSION = "1.0.0"
+    HOST = "0.0.0.0"
+    PORT = int(os.getenv("MCP_SERVER_PORT", "8000"))
+
     # === Providers ===
     STT_PROVIDER = os.getenv("STT_PROVIDER", "sarvam")
     LLM_PROVIDER = os.getenv("LLM_PROVIDER", "groq")
@@ -15,19 +21,17 @@ class Config:
     GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
     # === TTS ===
-    ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "EXAVITQu4vr4xnSDxMaL")  # Bella (reliable)
+    ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "EXAVITQu4vr4xnSDxMaL")  # Bella
     ELEVENLABS_MODEL = os.getenv("ELEVENLABS_MODEL", "eleven_turbo_v2_5")
     OPENAI_TTS_VOICE = os.getenv("OPENAI_TTS_VOICE", "nova")
     TTS_SPEED = float(os.getenv("TTS_SPEED", "1.15"))
 
-    # === Sarvam (fallback) ===
+    # === Sarvam fallback ===
     SARVAM_TTS_LANGUAGE = "en-IN"
     SARVAM_TTS_SPEAKER = "rohan"
 
-    # === MCP Server ===
-    MCP_SERVER_PORT = int(os.getenv("MCP_SERVER_PORT", "8000"))
-
     # === Logging ===
     DEBUG = os.getenv("DEBUG", "false").lower() == "true"
+
 
 config = Config()
